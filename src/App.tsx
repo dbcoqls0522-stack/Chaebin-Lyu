@@ -663,11 +663,11 @@ const PortfolioView = ({ data }: { data: PortfolioData }) => {
                 <div className="space-y-4 text-gray-600">
                   {proj.problem && <p><strong>Problem:</strong> {proj.problem}</p>}
                   {proj.mission && <p><strong>Mission:</strong> {proj.mission}</p>}
-                  <p><strong>Action:</strong> 
+                  <div><strong>Action:</strong> 
                     <ul className="list-disc pl-5 mt-2 space-y-1">
                       {proj.action.map((a, i) => <li key={i}>{a}</li>)}
                     </ul>
-                  </p>
+                  </div>
                   <p className="bg-blue-50 p-4 border-l-4 border-blue-900 rounded-r-lg font-medium text-blue-900 shadow-sm">
                     Result: {proj.result}
                   </p>
