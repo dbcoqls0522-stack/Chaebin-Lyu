@@ -266,35 +266,87 @@ const SectionHeader = ({ title, subtitle }: { title: string, subtitle?: string }
 );
 
 // --- Image Upload Helper ---
-const ImageUpload = ({ label, currentImage, onImageChange, onRemove }: { label: string, currentImage?: string, onImageChange: (base64: string) => void, onRemove?: () => void }) => {
+const ImageUpload = ({ label, currentImage, onImageChange, onRemove }: { label: string, currentImage?: string, onImageChange: (val: string) => void, onRemove?: () => void }) => {
+  const [showUpload, setShowUpload] = useState(false);
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         onImageChange(reader.result as string);
+        setShowUpload(false); // Switch back to URL view (which shows the path/base64)
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const isBase64 = currentImage?.startsWith('data:');
+  const isLocalFile = currentImage?.startsWith('/uploads/');
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3 p-4 bg-gray-50/50 rounded-xl border border-gray-100">
       <div className="flex justify-between items-center">
-        <Label>{label}</Label>
-        {onRemove && (
-          <Button variant="ghost" size="sm" className="h-6 text-red-500 hover:text-red-700" onClick={onRemove}>
-            <Trash2 className="w-3 h-3 mr-1" /> Remove
-          </Button>
-        )}
+        <Label className="text-sm font-bold text-blue-900 flex items-center gap-2">
+          {label}
+          {isLocalFile && <span className="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded uppercase">Cloud File</span>}
+          {isBase64 && <span className="text-[10px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded uppercase">Pending Upload</span>}
+        </Label>
+        <div className="flex gap-2">
+          {onRemove && (
+            <Button variant="ghost" size="sm" className="h-7 text-red-500 hover:text-red-700 text-xs px-2" onClick={onRemove}>
+              <Trash2 className="w-3 h-3" />
+            </Button>
+          )}
+        </div>
       </div>
-      <div className="flex items-center gap-4">
-        {currentImage && (
-          <div className="w-16 h-16 rounded-md overflow-hidden border bg-gray-50">
-            <img src={currentImage} className="w-full h-full object-cover" alt="Preview" />
+      
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-16 h-16 rounded-lg overflow-hidden border bg-white shadow-sm shrink-0 flex items-center justify-center">
+            {currentImage ? (
+              <img src={currentImage} className="w-full h-full object-cover" alt="Preview" referrerPolicy="no-referrer" />
+            ) : (
+              <Search className="w-6 h-6 text-gray-300" />
+            )}
           </div>
-        )}
-        <Input type="file" accept="image/*" onChange={handleFileChange} className="cursor-pointer" />
+          
+          <div className="flex-1 space-y-2">
+            {!showUpload ? (
+              <div className="flex gap-2">
+                <Input 
+                  placeholder="https://image-url.com/photo.jpg"
+                  value={currentImage || ""} 
+                  onChange={(e) => onImageChange(e.target.value)}
+                  className="text-sm h-10 bg-white"
+                />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-10 border-blue-200 text-blue-900 hover:bg-blue-50 shrink-0"
+                  onClick={() => setShowUpload(true)}
+                >
+                  Upload File
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Input type="file" accept="image/*" onChange={handleFileChange} className="cursor-pointer text-sm h-10 bg-white flex-1" />
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-10 text-gray-500"
+                  onClick={() => setShowUpload(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+            <p className="text-[10px] text-gray-500 italic pl-1">
+              * Recommended: Paste a URL for reliable GitHub syncing, or upload a file to save to cloud storage.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
