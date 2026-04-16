@@ -146,7 +146,7 @@ const INITIAL_DATA: PortfolioData = {
     {
       "id": "proj-1",
       "brand": "Meta",
-      "logo": "/uploads/logo_1776362407604_k146o.png",
+      "logo": "https://www.image2url.com/r2/default/images/1776363590650-50b592a4-b683-4ef5-a848-cc06348325f1.png",
       "title": "KakaoPage Performance Marketing (BAT)",
       "subtitle": "CPA Reduced by 50%",
       "problem": "Fragmented performance in iOS campaigns compared to Android due to tracking limitations and generic creative assets.",
@@ -157,13 +157,13 @@ const INITIAL_DATA: PortfolioData = {
         "Implemented meticulous daily quality monitoring and target filtering.."
       ],
       "result": "Strategic restructuring led to a 50% drop in CPA within 7 days, now serving as a benchmark for other accounts.",
-      "image": "https://picsum.photos/seed/ads/1200/800",
+      "image": "https://www.image2url.com/r2/default/images/1776363666402-8536d1d6-9251-4158-af6e-abd85c12a30d.jpg",
       "images": []
     },
     {
       "id": "proj-2",
       "brand": "LG Electronics",
-      "logo": "/uploads/logo_1776362407605_tyund.png",
+      "logo": "https://www.image2url.com/r2/default/images/1776363449770-a4c528c0-6816-4751-8446-7d36f3f274b8.png",
       "title": "LG Electronics Sales Strategy (Team Leader)",
       "subtitle": "Pioneering the Subscription Economy",
       "problem": "",
@@ -174,16 +174,15 @@ const INITIAL_DATA: PortfolioData = {
         "Validated strategy through 10+ real estate interviews and 100+ local surveys."
       ],
       "result": "Presented a comprehensive 'My First LG' strategy targeting MZ-generation single households.",
-      "image": "/uploads/project_1776359814674_cmm67.png",
+      "image": "https://www.image2url.com/r2/default/images/1776362194977-c4796d68-1c57-4ff6-a68d-9231042d9723.png",
       "images": [
-        "https://www.image2url.com/r2/default/images/1776362194977-c4796d68-1c57-4ff6-a68d-9231042d9723.png",
         "https://www.image2url.com/r2/default/images/1776362270498-4c869a20-1d45-47fd-9211-bb9e891ebde7.png"
       ]
     },
     {
       "id": "proj-3",
       "brand": "Olive International",
-      "logo": "/uploads/logo_1776362407605_wy7an.png",
+      "logo": "https://www.image2url.com/r2/default/images/1776363536957-a788bcf9-903f-4584-98c9-11244aec33df.png",
       "title": "Spanish Market Entry for 'Milk Touch'",
       "subtitle": "Global sales strategy for Korean cosmetic brand",
       "problem": "K-beauty visibility was low in the Spanish market despite growing interest, requiring a localized viral approach.",
@@ -194,9 +193,8 @@ const INITIAL_DATA: PortfolioData = {
         "Leveraged exchange student network to conduct 100+ local surveys and 10+ deep interviews in Spanish."
       ],
       "result": "Recommended strategies and product selections were adopted by 'Miin Cosmetic', a major K-beauty retailer in Spain.",
-      "image": "/uploads/project_1776359814676_g5hvl.png",
+      "image": "https://www.image2url.com/r2/default/images/1776362012159-4b9294d7-6823-464b-87ee-85b96e15ff06.png",
       "images": [
-        "https://www.image2url.com/r2/default/images/1776362012159-4b9294d7-6823-464b-87ee-85b96e15ff06.png",
         "https://www.image2url.com/r2/default/images/1776362075423-85c613aa-941b-4889-92de-78fd3caff13f.png"
       ]
     }
