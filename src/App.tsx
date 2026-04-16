@@ -52,6 +52,7 @@ interface Project {
   mission: string;
   action: string[];
   result: string;
+  image?: string;
   images: string[];
 }
 
@@ -88,38 +89,39 @@ interface PortfolioData {
 
 // --- Initial Data ---
 const INITIAL_DATA: PortfolioData = {
-  hero: {
-    name: "CHA EBIN LYU",
-    tagline: "Results-Oriented Marketer Empowering Teams Through Data & Collaboration",
-    phone: "+82 10 9132 6751",
-    email: "chaebin0522@naver.com",
-    location: "Seoul, South Korea",
-    birthDate: "May 22, 2002"
+  "hero": {
+    "name": "CHAEBIN LYU",
+    "tagline": "Driving results through data and teamwork",
+    "phone": "+82 10 9132 6751",
+    "email": "chaebin0522@naver.com",
+    "location": "Seoul, South Korea",
+    "birthDate": "May 22, 2002",
+    "image": "https://www.image2url.com/r2/default/images/1776362155499-23328bb4-fabd-4549-90a4-1c1fde703838.jpg"
   },
-  experiences: [
+  "experiences": [
     {
-      id: "exp-1",
-      company: "BAT (Performance Marketing Agency)",
-      role: "Performance AE",
-      period: "Dec 2024 – Aug 2025",
-      desc: "Managed high-stakes campaigns for KakaoPage, optimizing creative strategies and system architectures to drive significant efficiency gains."
+      "id": "exp-1",
+      "company": "BAT (Marketing Agency)",
+      "role": "Performance Marketing AE",
+      "period": "Dec 2024 – Aug 2025",
+      "desc": "Managed high-stakes campaigns for KakaoPage, optimizing creative strategies and system architectures to drive significant efficiency gains."
     },
     {
-      id: "exp-2",
-      company: "Sungkyunkwan University (SKKU)",
-      role: "B.B.A. in Global Business Administration",
-      period: "Mar 2021 – Feb 2026 (Expected)",
-      desc: ""
+      "id": "exp-2",
+      "company": "Sungkyunkwan University (SKKU)",
+      "role": "BBA in Global Business Administration",
+      "period": "Mar 2021 – Feb 2026",
+      "desc": ""
     },
     {
-      id: "exp-3",
-      company: "Kelley School of Business (Indiana University)",
-      role: "Exchange Student Program",
-      period: "Aug 2023 – Dec 2023",
-      desc: ""
+      "id": "exp-3",
+      "company": "Kelley School of Business (Indiana University)",
+      "role": "Exchange Student",
+      "period": "Aug 2023 – Dec 2023",
+      "desc": ""
     }
   ],
-  skills: [
+  "skills": [
     "Google Analytics Certified",
     "Python & SQL for Data Analysis",
     "Advanced Data Analytics (ADsP)",
@@ -128,65 +130,98 @@ const INITIAL_DATA: PortfolioData = {
     "GTQ Photoshop L1",
     "Performance Creative Ideation"
   ],
-  awards: [
-    { date: "2024.12", title: "Excellence Award: Mirae Asset Investment Project", subtitle: "Team Leader / Academic-Industrial Cooperation Project" },
-    { date: "2023.02", title: "Excellence Award: CJ LiveCity Business Camp", subtitle: "2nd Joint Business Strategy Competition" }
-  ],
-  projects: [
+  "awards": [
     {
-      id: "proj-1",
-      brand: "Meta",
-      logo: "https://picsum.photos/seed/meta/100/100",
-      title: "KakaoPage Performance Marketing (BAT)",
-      subtitle: "CPA Reduced by 50%",
-      problem: "Fragmented performance in iOS campaigns compared to Android due to tracking limitations and generic creative assets.",
-      mission: "",
-      action: [
-        "Reconstructed campaign architecture targeting gender-specific nuances.",
-        "Developed creative types based on high-performing tropes (e.g., OP protagonists, Underdog stories).",
-        "Implemented meticulous daily quality monitoring and negative space filtering."
-      ],
-      result: "Strategic restructuring led to a 50% drop in CPA within 7 days, now serving as a benchmark for other accounts.",
-      images: []
+      "date": "2024.12",
+      "title": "Excellence Award: Mirae Asset Investment Project",
+      "subtitle": "Team Leader / Academic-Industrial Cooperation Project"
     },
     {
-      id: "proj-2",
-      brand: "LG Electronics",
-      logo: "https://picsum.photos/seed/lg/100/100",
-      title: "LG Electronics Sales Strategy (Team Leader)",
-      subtitle: "Pioneering the Subscription Economy",
-      problem: "",
-      mission: "Propose a new home appliance rental/subscription business model for LG Electronics.",
-      action: [
+      "date": "2023.02",
+      "title": "Excellence Award: CJ LiveCity Business Camp",
+      "subtitle": "2nd Joint Business Strategy Competition"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-1",
+      "brand": "Meta",
+      "logo": "/uploads/logo_1776362407604_k146o.png",
+      "title": "KakaoPage Performance Marketing (BAT)",
+      "subtitle": "CPA Reduced by 50%",
+      "problem": "Fragmented performance in iOS campaigns compared to Android due to tracking limitations and generic creative assets.",
+      "mission": "",
+      "action": [
+        "Reconstructed campaign architecture targeting gender-specific nuances.",
+        "Developed creatives based on high-performing keywords",
+        "Implemented meticulous daily quality monitoring and target filtering.."
+      ],
+      "result": "Strategic restructuring led to a 50% drop in CPA within 7 days, now serving as a benchmark for other accounts.",
+      "image": "https://picsum.photos/seed/ads/1200/800",
+      "images": []
+    },
+    {
+      "id": "proj-2",
+      "brand": "LG Electronics",
+      "logo": "/uploads/logo_1776362407605_tyund.png",
+      "title": "LG Electronics Sales Strategy (Team Leader)",
+      "subtitle": "Pioneering the Subscription Economy",
+      "problem": "",
+      "mission": "Propose a new home appliance rental/subscription business model for LG Electronics.",
+      "action": [
         "Discovered a 'Used Product' stigma among young consumers through focus groups.",
         "Re-positioned 'Rental' as 'Care-based Tech-Lifecycle' tailored for short-term studio apartments.",
         "Validated strategy through 10+ real estate interviews and 100+ local surveys."
       ],
-      result: "Presented a comprehensive 'My First LG' strategy targeting MZ-generation single households.",
-      images: ["https://picsum.photos/seed/lg/1200/800", "https://picsum.photos/seed/lg2/1200/800"]
+      "result": "Presented a comprehensive 'My First LG' strategy targeting MZ-generation single households.",
+      "image": "/uploads/project_1776359814674_cmm67.png",
+      "images": [
+        "https://www.image2url.com/r2/default/images/1776362194977-c4796d68-1c57-4ff6-a68d-9231042d9723.png",
+        "https://www.image2url.com/r2/default/images/1776362270498-4c869a20-1d45-47fd-9211-bb9e891ebde7.png"
+      ]
     },
     {
-      id: "proj-3",
-      brand: "Olive International",
-      logo: "https://picsum.photos/seed/olive/100/100",
-      title: "Spanish Market Entry for 'Milk Touch'",
-      subtitle: "Strategic Viral Marketing & Retail Synergy",
-      problem: "K-beauty visibility was low in the Spanish market despite growing interest, requiring a localized viral approach.",
-      mission: "Strategic entry plan for Olive International's cosmetic brand 'Milk Touch' in Spain.",
-      action: [
+      "id": "proj-3",
+      "brand": "Olive International",
+      "logo": "/uploads/logo_1776362407605_wy7an.png",
+      "title": "Spanish Market Entry for 'Milk Touch'",
+      "subtitle": "Global sales strategy for Korean cosmetic brand",
+      "problem": "K-beauty visibility was low in the Spanish market despite growing interest, requiring a localized viral approach.",
+      "mission": "Strategic entry plan for Olive International's cosmetic brand 'Milk Touch' in Spain.",
+      "action": [
         "Analyzed successful K-beauty mapping in the EU to identify growth levers.",
         "Proposed image-centric SNS viral strategy leveraging 'Milk Touch's distinctive visualization assets.",
         "Leveraged exchange student network to conduct 100+ local surveys and 10+ deep interviews in Spanish."
       ],
-      result: "Recommended strategies and product selections were adopted by 'Miin Cosmetic', a major K-beauty retailer in Spain.",
-      images: ["https://picsum.photos/seed/miin/1200/800", "https://picsum.photos/seed/miin2/1200/800"]
+      "result": "Recommended strategies and product selections were adopted by 'Miin Cosmetic', a major K-beauty retailer in Spain.",
+      "image": "/uploads/project_1776359814676_g5hvl.png",
+      "images": [
+        "https://www.image2url.com/r2/default/images/1776362012159-4b9294d7-6823-464b-87ee-85b96e15ff06.png",
+        "https://www.image2url.com/r2/default/images/1776362075423-85c613aa-941b-4889-92de-78fd3caff13f.png"
+      ]
     }
   ],
-  timeline: [
-    { year: "2024-2025", title: "President of MCL Marketing Strategy Club", desc: "Led a 30-member elite marketing club, secured 3+ industrial cooperation projects with 30% improved contract value." },
-    { year: "2024", title: "Galaxy Campus Ambassador", desc: "4th generation ambassador focusing on youth engagement and community building for Samsung Galaxy." },
-    { year: "2023", title: "Taylor Port Wine Rebranding", desc: "Explored Gen-Z perception of traditional wine and restructured digital touchpoints." },
-    { year: "2022", title: "CJ LiveCity CX Strategy", desc: "Awarded for designing immersive brand experiences for the future K-culture arena." }
+  "timeline": [
+    {
+      "year": "2024-2025",
+      "title": "President of MCL Marketing Strategy Club",
+      "desc": "Led a 30-member elite marketing club, secured 3+ industrial cooperation projects with 30% improved contract value."
+    },
+    {
+      "year": "2024",
+      "title": "Galaxy Campus Ambassador",
+      "desc": "4th generation ambassador focusing on youth engagement and community building for Samsung Galaxy."
+    },
+    {
+      "year": "2023",
+      "title": "Taylor Port Wine Rebranding",
+      "desc": "Explored Gen-Z perception of traditional wine and restructured digital touchpoints."
+    },
+    {
+      "year": "2022",
+      "title": "CJ LiveCity CX Strategy",
+      "desc": "Awarded for designing immersive brand experiences for the future K-culture arena."
+    }
   ]
 };
 
@@ -536,6 +571,15 @@ const AdminHome = ({ data, updateData, reloadData }: { data: PortfolioData, upda
                     </Button>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <ImageUpload 
+                      label="Main Thumbnail" 
+                      currentImage={proj.image} 
+                      onImageChange={(val) => {
+                        const newProj = [...localData.projects];
+                        newProj[idx].image = val;
+                        setLocalData({ ...localData, projects: newProj });
+                      }}
+                    />
                     {(proj.images || []).map((img, imgIdx) => (
                       <div key={imgIdx}>
                         <ImageUpload 
@@ -700,44 +744,52 @@ const PortfolioView = ({ data }: { data: PortfolioData }) => {
       <section className="py-24 container mx-auto px-6 max-w-6xl bg-gray-50/50 rounded-[3rem]">
         <SectionHeader title="Featured Projects" />
         <div className="space-y-32">
-          {data.projects.map((proj, idx) => (
-            <div key={proj.id} className={`grid grid-cols-1 items-center gap-12 ${proj.images?.length > 0 ? 'lg:grid-cols-2' : 'max-w-3xl mx-auto'}`}>
-              <motion.div 
-                initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                className={`space-y-6 ${idx % 2 !== 0 && proj.images?.length > 0 ? 'order-1 lg:order-2' : ''}`}
-              >
-                <div className="flex items-center gap-4">
-                  {proj.logo && <img src={proj.logo} className="w-12 h-12 rounded-lg" referrerPolicy="no-referrer" alt={proj.brand} />}
-                  <h4 className="text-2xl font-bold tracking-tight">{proj.title}</h4>
-                </div>
-                <h5 className="text-4xl font-extrabold text-blue-900 leading-tight">{proj.subtitle}</h5>
-                <div className="space-y-4 text-gray-600">
-                  {proj.problem && <p><strong>Problem:</strong> {proj.problem}</p>}
-                  {proj.mission && <p><strong>Mission:</strong> {proj.mission}</p>}
-                  <div><strong>Action:</strong> 
-                    <ul className="list-disc pl-5 mt-2 space-y-1">
-                      {proj.action.map((a, i) => <li key={i}>{a}</li>)}
-                    </ul>
+          {data.projects.map((proj, idx) => {
+            // Create a normalized list of images for rendering
+            const allImages = [...(proj.images || [])];
+            if (proj.image && !allImages.includes(proj.image)) {
+              allImages.unshift(proj.image);
+            }
+
+            return (
+              <div key={proj.id} className={`grid grid-cols-1 items-center gap-12 ${allImages.length > 0 ? 'lg:grid-cols-2' : 'max-w-3xl mx-auto'}`}>
+                <motion.div 
+                  initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  className={`space-y-6 ${idx % 2 !== 0 && allImages.length > 0 ? 'order-1 lg:order-2' : ''}`}
+                >
+                  <div className="flex items-center gap-4">
+                    {proj.logo && <img src={proj.logo} className="w-12 h-12 rounded-lg" referrerPolicy="no-referrer" alt={proj.brand} />}
+                    <h4 className="text-2xl font-bold tracking-tight">{proj.title}</h4>
                   </div>
-                  <p className="bg-blue-50 p-4 border-l-4 border-blue-900 rounded-r-lg font-medium text-blue-900 shadow-sm">
-                    Result: {proj.result}
-                  </p>
-                </div>
-              </motion.div>
-              
-              {proj.images?.length > 0 && (
-                <div className={`bg-gray-100 rounded-3xl aspect-video relative overflow-hidden shadow-inner group ${idx % 2 !== 0 ? 'order-2 lg:order-1' : ''}`}>
-                  {proj.images.length === 1 ? (
-                    <img src={proj.images[0]} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" referrerPolicy="no-referrer" alt="Project" />
-                  ) : (
-                    <ImageCarousel images={proj.images} />
-                  )}
-                  <div className="absolute inset-0 bg-blue-900/5 mix-blend-multiply pointer-events-none" />
-                </div>
-              )}
-            </div>
-          ))}
+                  <h5 className="text-4xl font-extrabold text-blue-900 leading-tight">{proj.subtitle}</h5>
+                  <div className="space-y-4 text-gray-600">
+                    {proj.problem && <p><strong>Problem:</strong> {proj.problem}</p>}
+                    {proj.mission && <p><strong>Mission:</strong> {proj.mission}</p>}
+                    <div><strong>Action:</strong> 
+                      <ul className="list-disc pl-5 mt-2 space-y-1">
+                        {proj.action.map((a, i) => <li key={i}>{a}</li>)}
+                      </ul>
+                    </div>
+                    <p className="bg-blue-50 p-4 border-l-4 border-blue-900 rounded-r-lg font-medium text-blue-900 shadow-sm">
+                      Result: {proj.result}
+                    </p>
+                  </div>
+                </motion.div>
+                
+                {allImages.length > 0 && (
+                  <div className={`bg-gray-100 rounded-3xl aspect-video relative overflow-hidden shadow-inner group ${idx % 2 !== 0 ? 'order-2 lg:order-1' : ''}`}>
+                    {allImages.length === 1 ? (
+                      <img src={allImages[0]} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" referrerPolicy="no-referrer" alt="Project" />
+                    ) : (
+                      <ImageCarousel images={allImages} />
+                    )}
+                    <div className="absolute inset-0 bg-blue-900/5 mix-blend-multiply pointer-events-none" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
 
