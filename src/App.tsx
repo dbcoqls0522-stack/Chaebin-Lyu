@@ -524,16 +524,16 @@ const PortfolioView = ({ data }: { data: PortfolioData }) => {
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-blue-100">
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex flex-col items-center justify-center overflow-hidden bg-white">
-        <div className="absolute top-0 w-full h-1/2 bg-gradient-to-b from-blue-900 to-blue-800" />
+      <section className="relative min-h-[80vh] flex flex-col items-center justify-center overflow-hidden bg-white py-12">
+        <div className="absolute top-0 w-full h-[60%] bg-gradient-to-b from-blue-900 to-blue-800" />
         
         <div className="container mx-auto px-6 relative z-10">
-          <div className="bg-white rounded-[2rem] shadow-2xl p-12 flex flex-col md:flex-row items-center gap-12 max-w-6xl mx-auto">
+          <div className="bg-white rounded-[2rem] shadow-2xl p-12 flex flex-col md:row-reverse lg:flex-row items-center gap-12 max-w-6xl mx-auto">
             <motion.div 
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8 }}
-              className="w-64 h-64 rounded-full overflow-hidden border-8 border-white shadow-xl flex-shrink-0"
+              className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden border-8 border-white shadow-xl flex-shrink-0"
             >
               <img 
                 src={data.hero.image || "https://picsum.photos/seed/chaebin/400/400"} 
@@ -543,29 +543,29 @@ const PortfolioView = ({ data }: { data: PortfolioData }) => {
               />
             </motion.div>
             
-            <div className="flex-1 text-center md:text-left">
+            <div className="flex-1 text-center lg:text-left">
               <motion.div {...fadeIn}>
-                <h1 className="text-4xl md:text-5xl font-extrabold mb-4 font-display uppercase tracking-tight">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 font-display uppercase tracking-tight">
                   {data.hero.name.split(" ").map((s, i) => i === 1 ? <span key={i} className="text-blue-900 underline decoration-4 underline-offset-8">{s} </span> : s + " ")}
                 </h1>
-                <p className="text-2xl font-medium text-gray-700 mb-8 italic">
+                <p className="text-xl md:text-2xl font-medium text-gray-700 mb-8 italic">
                   {data.hero.tagline}
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600">
-                  <div className="flex items-center justify-center md:justify-start gap-3">
+                  <div className="flex items-center justify-center lg:justify-start gap-3">
                     <Phone className="w-5 h-5 text-blue-900" />
                     <span>{data.hero.phone}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-3">
+                  <div className="flex items-center justify-center lg:justify-start gap-3">
                     <Mail className="w-5 h-5 text-blue-900" />
                     <span>{data.hero.email}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-3">
+                  <div className="flex items-center justify-center lg:justify-start gap-3">
                     <MapPin className="w-5 h-5 text-blue-900" />
                     <span>{data.hero.location}</span>
                   </div>
-                  <div className="flex items-center justify-center md:justify-start gap-3">
+                  <div className="flex items-center justify-center lg:justify-start gap-3">
                     <Calendar className="w-5 h-5 text-blue-900" />
                     <span>{data.hero.birthDate}</span>
                   </div>
@@ -730,19 +730,62 @@ export default function App() {
   const [data, setData] = useState<PortfolioData>(INITIAL_DATA);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
+  const [backupJSON, setBackupJSON] = useState<string | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleUpdateData = (newData: PortfolioData) => {
+  const handleUpdateData = async (newData: PortfolioData) => {
     setData(newData);
-    localStorage.setItem("portfolio_data", JSON.stringify(newData));
+    
+    // 1. Try server save (no size limit)
+    try {
+      const response = await fetch("/api/data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newData)
+      });
+      if (response.ok) {
+        toast.success("Successfully saved to server database!");
+      } else {
+        throw new Error("Server rejected the request");
+      }
+    } catch (err) {
+      console.error("Server save failed", err);
+      toast.error("Cloud save failed. Trying local storage...");
+    }
+
+    // 2. Backup to localStorage (limited to 5MB)
+    try {
+      localStorage.setItem("portfolio_data", JSON.stringify(newData));
+    } catch (e) {
+      console.error("Local storage quota exceeded", e);
+      setBackupJSON(JSON.stringify(newData, null, 2));
+      toast.error("Local storage full! Please use the emergency backup option.");
+    }
   };
 
   useEffect(() => {
-    const savedData = localStorage.getItem("portfolio_data");
-    if (savedData) {
-      setData(JSON.parse(savedData));
-    }
+    const loadData = async () => {
+      // Preference: Server Data > LocalStorage > InitialData
+      try {
+        const response = await fetch("/api/data");
+        if (response.ok) {
+          const serverData = await response.json();
+          if (serverData) {
+            setData(serverData);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Could not load from server, checking local storage.");
+      }
+
+      const savedData = localStorage.getItem("portfolio_data");
+      if (savedData) {
+        setData(JSON.parse(savedData));
+      }
+    };
+    loadData();
   }, []);
 
   const handleAdminLogin = (e: React.FormEvent) => {
@@ -755,9 +798,50 @@ export default function App() {
     }
   };
 
+  const downloadBackup = () => {
+    if (!backupJSON) return;
+    const blob = new Blob([backupJSON], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "portfolio_backup.json";
+    a.click();
+    URL.revokeObjectURL(url);
+    setBackupJSON(null);
+  };
+
   return (
     <>
-      <Toaster />
+      <Toaster position="top-center" />
+      
+      {/* Emergency Backup Modal */}
+      {backupJSON && (
+        <div className="fixed inset-0 z-[100] bg-black/60 flex items-center justify-center p-6 backdrop-blur-sm">
+          <Card className="w-full max-w-lg border-2 border-blue-900 shadow-2xl">
+            <CardHeader>
+              <CardTitle className="text-red-600 flex items-center gap-2">
+                <Save className="w-5 h-5" /> Critical: Storage Limit Reached
+              </CardTitle>
+              <CardDescription>
+                Your browser's local storage is full due to high-quality images. 
+                Your changes ARE currently in the app's memory but couldn't be permanently saved.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm font-medium">Please download this backup file before closing or refreshing.</p>
+              <div className="flex gap-3">
+                <Button onClick={downloadBackup} className="flex-1 bg-blue-900 hover:bg-blue-950">
+                  Download Backup JSON
+                </Button>
+                <Button variant="outline" onClick={() => setBackupJSON(null)}>
+                  Dismiss
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       <Routes>
         <Route path="/" element={<PortfolioView data={data} />} />
         <Route path="/admin" element={
