@@ -27,6 +27,7 @@ import {
   Lock,
   LayoutDashboard,
   Save,
+  RefreshCw,
   Trash2,
   Plus,
   ArrowLeft
@@ -300,7 +301,7 @@ const ImageUpload = ({ label, currentImage, onImageChange, onRemove }: { label: 
 };
 
 // --- Admin Sub-pages ---
-const AdminHome = ({ data, updateData }: { data: PortfolioData, updateData: (d: PortfolioData) => void }) => {
+const AdminHome = ({ data, updateData, reloadData }: { data: PortfolioData, updateData: (d: PortfolioData) => void, reloadData: () => Promise<boolean> }) => {
   const [localData, setLocalData] = useState(data);
 
   useEffect(() => {
@@ -313,16 +314,23 @@ const AdminHome = ({ data, updateData }: { data: PortfolioData, updateData: (d: 
 
   const handleSave = () => {
     updateData(localData);
-    toast.success("Changes saved successfully!");
   };
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-bold">Admin Dashboard</h2>
-        <Button onClick={handleSave} className="bg-blue-900 hover:bg-blue-950">
-          <Save className="w-4 h-4 mr-2" /> Save All Changes
-        </Button>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h2 className="text-3xl font-bold">Admin Dashboard</h2>
+          <p className="text-sm text-gray-500">Manage your portfolio content and images</p>
+        </div>
+        <div className="flex gap-3 w-full md:w-auto">
+          <Button variant="outline" onClick={reloadData} className="flex-1 md:flex-none border-blue-200 text-blue-900">
+            <RefreshCw className="w-4 h-4 mr-2" /> Sync from Cloud
+          </Button>
+          <Button onClick={handleSave} className="flex-1 md:flex-none bg-blue-900 hover:bg-blue-950">
+            <Save className="w-4 h-4 mr-2" /> Save All Changes
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="hero">
@@ -743,35 +751,62 @@ export default function App() {
     
     // 1. Try server save (no size limit)
     try {
+      toast.loading("Saving to cloud...", { id: "save-toast" });
       const response = await fetch("/api/data", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newData)
       });
+      
       if (response.ok) {
         const result = await response.json();
         if (result.success && result.data) {
           finalData = result.data;
+          // Synchronize state with processed data (containing file paths)
+          setData(finalData);
+          // Also update local storage with the lightweight data
+          localStorage.setItem("portfolio_data", JSON.stringify(finalData));
+          toast.success("Cloud sync complete! Images converted to files.", { id: "save-toast" });
+        } else {
+          throw new Error(result.error || "Server processing failed");
         }
-        toast.success("Successfully saved to server database!");
       } else {
-        throw new Error("Server rejected the request");
+        const errorText = await response.text();
+        throw new Error(`Server error: ${response.status} ${errorText}`);
       }
     } catch (err) {
-      console.error("Server save failed", err);
-      toast.error("Cloud save failed. Trying local storage...");
+      console.error("Server save failed:", err);
+      toast.error(`Cloud save failed: ${err instanceof Error ? err.message : 'Unknown error'}`, { id: "save-toast" });
+      
+      // Fallback: Continue with local state and try local storage
+      setData(newData);
+      try {
+        localStorage.setItem("portfolio_data", JSON.stringify(newData));
+        toast.info("Saved to local storage only.");
+      } catch (e) {
+        console.error("Local storage quota exceeded", e);
+        setBackupJSON(JSON.stringify(newData, null, 2));
+        toast.error("Storage full! Use the emergency backup button.");
+      }
     }
+  };
 
-    setData(finalData);
-
-    // 2. Backup to localStorage (limited to 5MB)
+  const reloadFromServer = async () => {
     try {
-      localStorage.setItem("portfolio_data", JSON.stringify(finalData));
-    } catch (e) {
-      console.error("Local storage quota exceeded", e);
-      setBackupJSON(JSON.stringify(finalData, null, 2));
-      toast.error("Local storage full! Please use the emergency backup option.");
+      const response = await fetch("/api/data");
+      if (response.ok) {
+        const serverData = await response.json();
+        if (serverData) {
+          setData(serverData);
+          localStorage.setItem("portfolio_data", JSON.stringify(serverData));
+          toast.success("Data reloaded matching server files.");
+          return true;
+        }
+      }
+    } catch (err) {
+      toast.error("Could not sync with server.");
     }
+    return false;
   };
 
   useEffect(() => {
@@ -901,7 +936,7 @@ export default function App() {
                 </div>
               </nav>
               <div className="max-w-4xl mx-auto px-4 py-10">
-                <AdminHome data={data} updateData={handleUpdateData} />
+                <AdminHome data={data} updateData={handleUpdateData} reloadData={reloadFromServer} />
               </div>
             </div>
           )

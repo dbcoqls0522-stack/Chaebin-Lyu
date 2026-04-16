@@ -14,6 +14,9 @@ async function startServer() {
   // Increase payload limit for base64 images
   app.use(express.json({ limit: '50mb' }));
 
+  // Serve static files from public directory
+  app.use(express.static(path.join(process.cwd(), "public")));
+
   const DATA_FILE = path.join(process.cwd(), "portfolio_data.json");
   const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 
@@ -24,15 +27,17 @@ async function startServer() {
 
   // Helper to save base64 image and return path
   const saveImage = (base64Str: string, prefix: string) => {
-    if (!base64Str || !base64Str.startsWith("data:image")) return base64Str;
+    if (!base64Str || !base64Str.startsWith("data_image") && !base64Str.startsWith("data:image")) return base64Str;
 
     try {
+      // Clean prefix for filename
+      const safePrefix = prefix.replace(/[^a-z0-9]/gi, '_').toLowerCase();
       const match = base64Str.match(/^data:image\/(\w+);base64,(.+)$/);
       if (!match) return base64Str;
 
       const ext = match[1];
       const data = match[2];
-      const filename = `${prefix}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
+      const filename = `${safePrefix}_${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${ext}`;
       const filePath = path.join(UPLOADS_DIR, filename);
 
       fs.writeFileSync(filePath, Buffer.from(data, 'base64'));
@@ -62,8 +67,8 @@ async function startServer() {
       const data = req.body;
 
       // Process images in the data structure
-      if (data.hero && data.hero.profileImage) {
-        data.hero.profileImage = saveImage(data.hero.profileImage, "profile");
+      if (data.hero && data.hero.image) {
+        data.hero.image = saveImage(data.hero.image, "hero");
       }
 
       if (data.projects) {
@@ -75,7 +80,7 @@ async function startServer() {
             proj.image = saveImage(proj.image, "project");
           }
           if (proj.images) {
-            proj.images = proj.images.map((img: string, idx: number) => saveImage(img, `project_item_${idx}`));
+            proj.images = proj.images.map((img: string, idx: number) => saveImage(img, `proj_${proj.id || 'idx'}_item_${idx}`));
           }
           return proj;
         });
