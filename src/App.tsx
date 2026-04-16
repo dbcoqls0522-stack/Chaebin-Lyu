@@ -303,6 +303,10 @@ const ImageUpload = ({ label, currentImage, onImageChange, onRemove }: { label: 
 const AdminHome = ({ data, updateData }: { data: PortfolioData, updateData: (d: PortfolioData) => void }) => {
   const [localData, setLocalData] = useState(data);
 
+  useEffect(() => {
+    setLocalData(data);
+  }, [data]);
+
   const handleHeroChange = (field: keyof typeof localData.hero, value: string) => {
     setLocalData({ ...localData, hero: { ...localData.hero, [field]: value } });
   };
@@ -735,7 +739,7 @@ export default function App() {
   const location = useLocation();
 
   const handleUpdateData = async (newData: PortfolioData) => {
-    setData(newData);
+    let finalData = newData;
     
     // 1. Try server save (no size limit)
     try {
@@ -745,6 +749,10 @@ export default function App() {
         body: JSON.stringify(newData)
       });
       if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.data) {
+          finalData = result.data;
+        }
         toast.success("Successfully saved to server database!");
       } else {
         throw new Error("Server rejected the request");
@@ -754,12 +762,14 @@ export default function App() {
       toast.error("Cloud save failed. Trying local storage...");
     }
 
+    setData(finalData);
+
     // 2. Backup to localStorage (limited to 5MB)
     try {
-      localStorage.setItem("portfolio_data", JSON.stringify(newData));
+      localStorage.setItem("portfolio_data", JSON.stringify(finalData));
     } catch (e) {
       console.error("Local storage quota exceeded", e);
-      setBackupJSON(JSON.stringify(newData, null, 2));
+      setBackupJSON(JSON.stringify(finalData, null, 2));
       toast.error("Local storage full! Please use the emergency backup option.");
     }
   };
